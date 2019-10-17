@@ -154,7 +154,7 @@ maxLikelihood = function(data, max.alleles, resolution) {
     }
     # Take log of the product of each individual’s multilocus genotype
     for (i in 1:N) {
-      likelihood.individual[i] = log(prod(likelihood.locus[i,]))
+      likelihood.individual[i] = sum(log(likelihood.locus[i,]))
     }
     # ln.likelihood[res] is the log.probability of the entire dataset, given a value of f
     ln.likelihood[res] = sum(likelihood.individual[, 1])
