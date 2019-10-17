@@ -2,4 +2,5 @@
 
 export(construct)
 export(maxLikelihood)
+export(readData)
 export(simulate)
