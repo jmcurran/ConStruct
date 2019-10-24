@@ -21,5 +21,6 @@ construct(data, max.alleles, f.resolution, c.resolution, r)
 construct
 }
 \examples{
-construct(data = "infile.txt", max.alleles = 1000, f.resolution = 100, c.resolution = 100, r = 0.0625)
+inFile = system.file("extdata", "infile.txt", package = "ConStruct", mustWork = TRUE)
+construct(data = inFile, max.alleles = 1000, f.resolution = 100, c.resolution = 100, r = 0.0625)
 }

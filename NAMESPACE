@@ -2,5 +2,9 @@
 
 export(construct)
 export(maxLikelihood)
+export(maxLikelihoodOld)
 export(readData)
 export(simulate)
+import(Rcpp)
+importFrom(Rcpp,evalCpp)
+useDynLib(ConStruct, .registration = TRUE)

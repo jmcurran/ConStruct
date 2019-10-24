@@ -4,11 +4,16 @@
 \alias{readData}
 \title{Read allele data from a file}
 \usage{
-readData(fileName, locusNames = FALSE, delim = "[,[:space:]]+")
+readData(fileName, locusNames = FALSE, delim = "[,[:space:]]+",
+  missing = NA)
 }
 \arguments{
 \item{fileName}{}
 }
 \description{
 Read allele data from a file
+}
+\examples{
+inFile = system.file("extdata", "infile.txt", package = "ConStruct", mustWork = TRUE)
+readData(inFile, missing = 0)
 }

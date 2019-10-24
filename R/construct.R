@@ -10,7 +10,8 @@
 #' @export
 #'
 #' @examples
-#' construct(data = "infile.txt", max.alleles = 1000, f.resolution = 100, c.resolution = 100, r = 0.0625)
+#' inFile = system.file("extdata", "infile.txt", package = "ConStruct", mustWork = TRUE)
+#' construct(data = inFile, max.alleles = 1000, f.resolution = 100, c.resolution = 100, r = 0.0625)
 construct = function(data,
                      max.alleles,
                      f.resolution,
@@ -180,20 +181,21 @@ construct = function(data,
     }
     # Convert probability of multilocus genotypes to log of probabilities
     for (i in 1:N) {
-      likelihood.individual[i] = log(prod(likelihood.locus[i,]))
+      likelihood.individual[i] = sum(log(likelihood.locus[i,]))
     }
     # Calculate the probability of the total sample, given value of f
     ln.likelihood[res] = sum(likelihood.individual[, 1])
     # Identify maximum likelihood value of f by subtracting maximum value
     # of ln.likelihood from each ln.likelihood
     max.value = max(ln.likelihood)
-    temp = matrix(0, resolution)
-    for (i in 1:resolution) {
-      temp[i] = ln.likelihood[i] - max.value
-    }
-    for (i in 1:resolution) {
-      ln.likelihood[i] = temp[i]
-    }
+    # temp = matrix(0, resolution)
+    # for (i in 1:resolution) {
+    #   temp[i] = ln.likelihood[i] - max.value
+    # }
+    # for (i in 1:resolution) {
+    #   ln.likelihood[i] = temp[i]
+    # }
+    ln.likelihood = ln.likelihood - max.value
     res = res + 1
     f.res = fst.max / resolution
     f = f + f.res
@@ -214,9 +216,10 @@ construct = function(data,
   print(ML)
   f = seq(0, by = f.res, (fst.max - f.res))
   # convert log likelihood values
-  for (i in 1:resolution) {
-    e.likelihood[i] = exp(ln.likelihood[i])
-  }
+  # for (i in 1:resolution) {
+  #   e.likelihood[i] = exp(ln.likelihood[i])
+  # }
+  e.likelihood = exp(ln.likelihood)
   total = sum(e.likelihood)
   #
   #
@@ -327,7 +330,7 @@ construct = function(data,
     }
   }
   # Identify maximum values of Fst and C
-  
+
   for (i in 1:f.resolution) {
     for (j in 1:c.resolution) {
       if (ln.likelihood.cs[i, j] == 0) {
