@@ -1,5 +1,70 @@
 #' construct
 #'
+#' @param data the input data
+#' @param max.alleles places an uppermost limit on the number of alleles considered
+#' @param f.resolution the resolution of the Fst parameter
+#' @param the resolution on the c parameter
+#' @param r is the value of the inbreeding coefficient being considered for the analysis of the dataset
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' inFile = system.file("extdata", "infile.txt", package = "ConStruct", mustWork = TRUE)
+#' data.f = readData(inFile, missing = 0)
+#' construct(data.f)
+construct = function(dataf,
+                     r = 1/16,
+                     start = c(0.5, 0.5),
+                     plot = FALSE,
+                     flength = 200,
+                     clength = 200) {
+
+  profileVec = as.vector(t(dataf$Profiles))
+
+  logLik = function(params){
+    theta = params[1]
+    C = params[2]
+    -ConStruct:::logLikelihoodCosang(theta, C, r, profileVec, dataf$numProfiles, dataf$numLoci, dataf$Freqs)
+  }
+
+  mlEst = nlminb(start = start, objective = logLik, lower = c(0,0), upper = c(1,1))
+
+  if(plot){
+    homozygous.frequency = lapply(dataf$Freqs, function(x)x^2)
+    Hs = mean(sapply(homozygous.frequency, sum))
+    fst.max = min(1, Hs / (1 - Hs))
+
+    faxis = seq(0, fst.max, length = flength)
+    Caxis = seq(0, 1, length = clength)
+    llsurface = logLikelihoodCosangMat(faxis, Caxis, r, profileVec, dataf$numProfiles, dataf$numLoci, dataf$Freqs);
+    llsurface  = llsurface - max(llsurface)
+    surface = exp(llsurface)
+    surface = surface / sum(surface)
+    contour(
+      faxis,
+      Caxis,
+      surface,
+      xlab = expression("F"[ST]),
+      ylab = expression("c"[g]),
+      nlevels = 4
+    )
+  }
+
+  #
+  cat("Maximum likelihood estimates\n")
+  cat("============================\n")
+  cat(paste0("Fst: ", signif(mlEst$par[1], 6)))
+  cat(paste0("C: ", signif(mlEst$par[2], 6)))
+
+  invisible(list(fst = mlEst$par[1], C = mlEst$par[2]))
+
+}
+# end of function
+
+
+#' constructOld
+#'
 #' @param data the input file
 #' @param max.alleles places an uppermost limit on the number of alleles considered
 #' @param f.resolution the resolution of the Fst parameter
@@ -11,8 +76,8 @@
 #'
 #' @examples
 #' inFile = system.file("extdata", "infile.txt", package = "ConStruct", mustWork = TRUE)
-#' construct(data = inFile, max.alleles = 1000, f.resolution = 100, c.resolution = 100, r = 0.0625)
-construct = function(data,
+#' constructOld(data = inFile, max.alleles = 1000, f.resolution = 100, c.resolution = 100, r = 0.0625)
+constructOld = function(data,
                      max.alleles,
                      f.resolution,
                      c.resolution,

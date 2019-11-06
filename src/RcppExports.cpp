@@ -20,9 +20,45 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// logLikelihoodCosang
+double logLikelihoodCosang(double theta, double C, double r, IntegerVector Profiles, int numProfiles, int numLoci, List freqs);
+RcppExport SEXP _ConStruct_logLikelihoodCosang(SEXP thetaSEXP, SEXP CSEXP, SEXP rSEXP, SEXP ProfilesSEXP, SEXP numProfilesSEXP, SEXP numLociSEXP, SEXP freqsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< double >::type C(CSEXP);
+    Rcpp::traits::input_parameter< double >::type r(rSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type Profiles(ProfilesSEXP);
+    Rcpp::traits::input_parameter< int >::type numProfiles(numProfilesSEXP);
+    Rcpp::traits::input_parameter< int >::type numLoci(numLociSEXP);
+    Rcpp::traits::input_parameter< List >::type freqs(freqsSEXP);
+    rcpp_result_gen = Rcpp::wrap(logLikelihoodCosang(theta, C, r, Profiles, numProfiles, numLoci, freqs));
+    return rcpp_result_gen;
+END_RCPP
+}
+// logLikelihoodCosangMat
+NumericMatrix logLikelihoodCosangMat(NumericVector theta, NumericVector C, double r, IntegerVector Profiles, int numProfiles, int numLoci, List freqs);
+RcppExport SEXP _ConStruct_logLikelihoodCosangMat(SEXP thetaSEXP, SEXP CSEXP, SEXP rSEXP, SEXP ProfilesSEXP, SEXP numProfilesSEXP, SEXP numLociSEXP, SEXP freqsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type C(CSEXP);
+    Rcpp::traits::input_parameter< double >::type r(rSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type Profiles(ProfilesSEXP);
+    Rcpp::traits::input_parameter< int >::type numProfiles(numProfilesSEXP);
+    Rcpp::traits::input_parameter< int >::type numLoci(numLociSEXP);
+    Rcpp::traits::input_parameter< List >::type freqs(freqsSEXP);
+    rcpp_result_gen = Rcpp::wrap(logLikelihoodCosangMat(theta, C, r, Profiles, numProfiles, numLoci, freqs));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_ConStruct_logLikelihood", (DL_FUNC) &_ConStruct_logLikelihood, 5},
+    {"_ConStruct_logLikelihoodCosang", (DL_FUNC) &_ConStruct_logLikelihoodCosang, 7},
+    {"_ConStruct_logLikelihoodCosangMat", (DL_FUNC) &_ConStruct_logLikelihoodCosangMat, 7},
     {NULL, NULL, 0}
 };
 

@@ -4,14 +4,18 @@
 \alias{maxLikelihood}
 \title{maxLikelihood}
 \usage{
-maxLikelihood(dataf, max.alleles, resolution)
+maxLikelihood(dataf, plot = FALSE, length = 200, alpha = 0.05)
 }
 \arguments{
+\item{dataf}{a list from \code{readData}}
+
+\item{plot}{if \code{TRUE} then the likelihood for F is plotted}
+
+\item{length}{the number of points at which to plot the likelihood of the F parameter}
+
+\item{alpha}{the confidence level for the confidence interval}
+
 \item{max.alleles}{max.alleles places an uppermost limit on the number of alleles considered}
-
-\item{resolution}{resolution is the resolution of the F parameter}
-
-\item{data}{the input file}
 }
 \description{
 maxLikelihood
@@ -19,5 +23,5 @@ maxLikelihood
 \examples{
 inFile = system.file("extdata", "infile.txt", package = "ConStruct", mustWork = TRUE)
 data.f = readData(inFile, missing = 0)
-maxLikelihood(data.f, resolution = 100)
+maxLikelihood(data.f, plot = TRUE)
 }

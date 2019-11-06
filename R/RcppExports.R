@@ -5,3 +5,11 @@ logLikelihood <- function(theta, Profiles, numProfiles, numLoci, freqs) {
     .Call(`_ConStruct_logLikelihood`, theta, Profiles, numProfiles, numLoci, freqs)
 }
 
+logLikelihoodCosang <- function(theta, C, r, Profiles, numProfiles, numLoci, freqs) {
+    .Call(`_ConStruct_logLikelihoodCosang`, theta, C, r, Profiles, numProfiles, numLoci, freqs)
+}
+
+logLikelihoodCosangMat <- function(theta, C, r, Profiles, numProfiles, numLoci, freqs) {
+    .Call(`_ConStruct_logLikelihoodCosangMat`, theta, C, r, Profiles, numProfiles, numLoci, freqs)
+}
+
