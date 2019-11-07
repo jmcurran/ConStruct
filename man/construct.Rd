@@ -5,18 +5,30 @@
 \title{construct}
 \usage{
 construct(dataf, r = 1/16, start = c(0.5, 0.5), plot = FALSE,
-  flength = 200, clength = 200)
+  flength = 200, clength = 200, alpha = 0.05)
 }
 \arguments{
 \item{r}{is the value of the inbreeding coefficient being considered for the analysis of the dataset}
 
+\item{plot}{if \code{TRUE} then a contour plot of the scaled likelihood surface will be shown}
+
+\item{flength}{the resolution with which to plot the Fst parameter (this controls plotting only)}
+
+\item{clength}{the resolution with which to plot the C parameter (this controls plotting only)}
+
+\item{alpha}{the confidence level for the likelihood ratio confidence intervals}
+
 \item{data}{the input data}
 
 \item{max.alleles}{places an uppermost limit on the number of alleles considered}
-
-\item{f.resolution}{the resolution of the Fst parameter}
-
-\item{the}{resolution on the c parameter}
+}
+\value{
+A list consisting of four elements: \itemize{
+\item \code{fst} the maximum likelihood estimate of the Fst parameter
+\item \code{C} the maximum likelihood estimate of the C parameter
+\item \code{fis.ci} a \eqn{100(1 - \alpha)}{100(1 - alpha)}% (LR based) confidence interval for the Fst parameter
+\item \code{C.ci} a \eqn{100(1 - \alpha)}{100(1 - alpha)}% (LR based) confidence interval for the C parameter
+}
 }
 \description{
 construct

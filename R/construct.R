@@ -1,12 +1,19 @@
 #' construct
 #'
 #' @param data the input data
-#' @param max.alleles places an uppermost limit on the number of alleles considered
-#' @param f.resolution the resolution of the Fst parameter
-#' @param the resolution on the c parameter
 #' @param r is the value of the inbreeding coefficient being considered for the analysis of the dataset
+#' @param plot if \code{TRUE} then a contour plot of the scaled likelihood surface will be shown
+#' @param max.alleles places an uppermost limit on the number of alleles considered
+#' @param flength the resolution with which to plot the Fst parameter (this controls plotting only)
+#' @param clength the resolution with which to plot the C parameter (this controls plotting only)
+#' @param alpha the confidence level for the likelihood ratio confidence intervals
 #'
-#' @return
+#' @return A list consisting of four elements: \itemize{
+#' \item \code{fst} the maximum likelihood estimate of the Fst parameter
+#' \item \code{C} the maximum likelihood estimate of the C parameter
+#' \item \code{fis.ci} a \eqn{100(1 - \alpha)}{100(1 - alpha)}% (LR based) confidence interval for the Fst parameter
+#' \item \code{C.ci} a \eqn{100(1 - \alpha)}{100(1 - alpha)}% (LR based) confidence interval for the C parameter
+#' }
 #' @export
 #'
 #' @examples
@@ -18,7 +25,8 @@ construct = function(dataf,
                      start = c(0.5, 0.5),
                      plot = FALSE,
                      flength = 200,
-                     clength = 200) {
+                     clength = 200,
+                     alpha = 0.05) {
 
   profileVec = as.vector(t(dataf$Profiles))
 
@@ -29,6 +37,23 @@ construct = function(dataf,
   }
 
   mlEst = nlminb(start = start, objective = logLik, lower = c(0,0), upper = c(1,1))
+
+  ## profile likelihood intervals
+  qc = qchisq(1 - alpha, 1) * 0.5
+
+  fxC = function(C){
+    ConStruct:::logLikelihoodCosang(theta = mlEst$par[1], C, r, profileVec, dataf$numProfiles, dataf$numLoci, dataf$Freqs) - (-mlEst$objective - qc)
+  }
+
+  lbC = uniroot(fxC, c(0, mlEst$par[2]))$root
+  ubC = uniroot(fxC, c(mlEst$par[2], 1))$root
+
+  fxTheta = function(theta){
+    ConStruct:::logLikelihoodCosang(theta, C = mlEst$par[2], r, profileVec, dataf$numProfiles, dataf$numLoci, dataf$Freqs) - (-mlEst$objective - qc)
+  }
+
+  lbTheta = max(0, uniroot(fxTheta, c(-mlEst$par[1], mlEst$par[1]))$root)
+  ubTheta = uniroot(fxTheta, c(mlEst$par[1], 1))$root
 
   if(plot){
     homozygous.frequency = lapply(dataf$Freqs, function(x)x^2)
@@ -54,11 +79,10 @@ construct = function(dataf,
   #
   cat("Maximum likelihood estimates\n")
   cat("============================\n")
-  cat(paste0("Fst: ", signif(mlEst$par[1], 6)))
-  cat(paste0("C: ", signif(mlEst$par[2], 6)))
+  cat(paste0("Fst: ", signif(mlEst$par[1], 6),  " [", signif(lbTheta, 6), ", ", signif(ubC, 6), "]\n"))
+  cat(paste0("C: ", signif(mlEst$par[2], 6),    " [", signif(lbC, 6), ", ", signif(ubC, 6), "]\n"))
 
-  invisible(list(fst = mlEst$par[1], C = mlEst$par[2]))
-
+  invisible(list(fst = mlEst$par[1], C = mlEst$par[2], fst.ci = c(lbTheta, ubTheta), C.ci = c(lbC, ubC)))
 }
 # end of function
 

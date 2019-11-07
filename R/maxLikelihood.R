@@ -34,7 +34,7 @@ maxLikelihood = function(dataf, plot = FALSE, length = 200,
 
   fx = function(theta){
       ConStruct:::logLikelihood(theta,
-                                profileVec,
+                                profilesVector,
                                 data.f$numProfiles,
                                 data.f$numLoci,
                                 data.f$Freqs) - ll_mle + qc
